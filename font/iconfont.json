@@ -1,0 +1,79 @@
+{
+  "id": "2419942",
+  "name": "智能监盘系统",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "20363971",
+      "name": "预警 (1)",
+      "font_class": "yujing1",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "20363972",
+      "name": "粉尘",
+      "font_class": "fenchen",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "20363973",
+      "name": "趋势",
+      "font_class": "qushi",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "20363974",
+      "name": "发电机",
+      "font_class": "fadianji",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "20363975",
+      "name": "记录",
+      "font_class": "jilu",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "20363976",
+      "name": "负荷比",
+      "font_class": "fuhebi",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "20363977",
+      "name": "健康",
+      "font_class": "jiankang",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "20363978",
+      "name": "危急值",
+      "font_class": "weijizhi",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "20363979",
+      "name": "严重告警",
+      "font_class": "yanzhonggaojing",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "20363980",
+      "name": "预警",
+      "font_class": "yujing",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    }
+  ]
+}

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智能监盘系统</title>
+    <link rel="stylesheet" href="css/element.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div id="app">
+        <div class="header">
+            <span class="header-title">智 能 监 盘 系 统</span>
+        </div>
+        <div class="first-row">
+            <div class="unit-load">
+                <div class="unit-item" v-for="unit in unitLoad" :key="unit.id">
+                    <i class="iconfont iconfuhebi"></i>
+                    <span class="unit-name">{{unit.name}}</span>
+                    <div class="unit-load-num-bg">
+                        <span class="unit-load-num">{{unit.loadNum}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="global-parameters">
+                <div class="global-parameters-item">
+                    <i class="iconfont iconfenchen"></i>
+                    <span class="global-parameters-name">NOX</span>
+                    <div class="global-parameters-bg">
+                        <span class="global-parameters-num">{{noxNum}}</span>
+                    </div>
+                </div>
+                <div class="global-parameters-item">
+                    <i class="iconfont iconfenchen"></i>
+                    <span class="global-parameters-name">SO2</span>
+                    <div class="global-parameters-bg">
+                        <span class="global-parameters-num">{{so2Num}}</span>
+                    </div>
+                </div>
+                <div class="global-parameters-item">
+                    <i class="iconfont iconfenchen"></i>
+                    <span class="global-parameters-name">粉尘量</span>
+                    <div class="global-parameters-bg">
+                        <span class="global-parameters-num">{{noxNum}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="unit-parameters">
+                <div id="unit-parameters" style="height:95px"></div>
+            </div>
+        </div>
+        <div class="second-row">
+            <div class="unit-info">
+                <div class="unit-health">
+                    <div class="head">
+                        <i class="iconfont iconjiankang icon-sty"></i>
+                        <span>机组健康情况</span>
+                    </div>
+                    <div class="unit-health-content">
+                        <div class="unit-health-item" v-for="unit in unitHealth" :key="unit.id">
+                            <i class="iconfont iconfadianji" :class="{ iconWarn: unit.healthNum <= 75 }"></i>
+                            <div class="unit-health-item-bg" :class="{ bgWarn: unit.healthNum <= 75}">
+                                <span class="unit-health-item-num">{{unit.healthNum}}</span>
+                            </div>
+                            <span class="unit-health-item-name">{{unit.name}}健康值</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="poor-health">
+                    <div class="head">
+                        <i class="iconfont iconyujing icon-sty"></i>
+                        <span>全厂健康恶劣设备</span>
+                    </div>
+                    <div class="unit-health-content">
+                        <div id="poor-health" style="width: 410px;height:210px"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="unit-warning">
+                <div class="head">
+                    <i class="iconfont iconyujing1 icon-sty"></i>
+                    <span>机组预警信息</span>
+                </div>
+                <div class="content">
+                    <div id="unit-warning" style="height:455px"></div>
+                </div>
+            </div>
+            <div class="measuring-point">
+                <div class="head">
+                    <i class="iconfont iconyanzhonggaojing icon-sty"></i>
+                    <span>全厂测点严重度>30</span>
+                </div>
+                <div class="content"></div>
+            </div>
+        </div>
+        <div class="third-row">
+            <div class="core-parameter-trends">
+                <div class="head">
+                    <i class="iconfont iconqushi icon-sty"></i>
+                    <span>全厂核心参数及特殊测点趋势图</span>
+                </div>
+                <div class="core-parameter-trends-content"></div>
+            </div>
+            <div class="processing-records">
+                <div class="head">
+                    <i class="iconfont iconjilu icon-sty"></i>
+                    <span>全厂主要设备处理记录</span>
+                </div>
+                <div class="processing-records-content"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/element.js"></script>
+<script src="js/echarts.min.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            unitLoad: [
+                {
+                    id: 0,
+                    name: '#1机组负荷',
+                    loadNum: 350
+                },
+                {
+                    id: 1,
+                    name: '#1机组负荷',
+                    loadNum: 350
+                },
+                {
+                    id: 2,
+                    name: '#1机组负荷',
+                    loadNum: 350
+                },
+                {
+                    id: 3,
+                    name: '#1机组负荷',
+                    loadNum: 350
+                }
+            ],
+            unitHealth: [
+                {
+                    id: 0,
+                    name: '#1机组',
+                    healthNum: 99
+                },
+                {
+                    id: 1,
+                    name: '#1机组',
+                    healthNum: 99
+                },
+                {
+                    id: 2,
+                    name: '#1机组',
+                    healthNum: 99
+                },
+                {
+                    id: 3,
+                    name: '#1机组',
+                    healthNum: 45
+                }
+            ],
+            noxNum: 350,
+            so2Num: 350,
+            dustNum: 350
+
+        },
+        mounted: function () {
+            this.drawParametersChart();
+            this.drawPoorHealth();
+            this.drawUnitWarning()
+        },
+        methods: {
+            drawParametersChart: function () {
+                var chartDom = document.getElementById('unit-parameters');
+                var myChart = echarts.init(chartDom);
+                var option;
+
+                option = {
+                    legend: {},
+                    tooltip: {},
+                    dataset: {
+                        dimensions: ['product', '测点', '设备', '系统'],
+                        source: [
+                            {product: '#1机组设备', '测点': 43.3, '设备': 85.8, '系统': 93.7},
+                            {product: '#2机组设备', '测点': 83.1, '设备': 73.4, '系统': 55.1},
+                            {product: '#3机组设备', '测点': 86.4, '设备': 65.2, '系统': 82.5},
+                            {product: '#4机组设备', '测点': 86.4, '设备': 65.2, '系统': 82.5}
+                        ]
+                    },
+                    xAxis: {type: 'category'},
+                    yAxis: {},
+                    // Declare several bar series, each will be mapped
+                    // to a column of dataset.source by default.
+                    series: [
+                        {type: 'bar'},
+                        {type: 'bar'},
+                        {type: 'bar'}
+                    ]
+                };
+
+                option && myChart.setOption(option);
+                window.addEventListener("resize",function(){
+                    myChart.resize();
+                });
+            },
+            drawPoorHealth: function () {
+                var chartDom = document.getElementById('poor-health');
+                var myChart = echarts.init(chartDom);
+                var option;
+
+                option = {
+                    xAxis: {
+                        type: 'category',
+                        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        data: [120, {
+                            value: 200,
+                            itemStyle: {
+                                color: '#a90000'
+                            }
+                        }, 150, 80, 70, 110, 130],
+                        type: 'bar'
+                    }]
+                };
+
+                option && myChart.setOption(option);
+                window.addEventListener("resize",function(){
+                    myChart.resize();
+                });
+            },
+            drawUnitWarning: function () {
+                var chartDom = document.getElementById('unit-warning');
+                var myChart = echarts.init(chartDom);
+                var option;
+
+                option = {
+                    title: {
+                        text: '某站点用户访问来源',
+                        subtext: '纯属虚构',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                    },
+                    series: [
+                        {
+                            name: '访问来源',
+                            type: 'pie',
+                            radius: '50%',
+                            data: [
+                                {value: 1048, name: '搜索引擎'},
+                                {value: 735, name: '直接访问'},
+                                {value: 580, name: '邮件营销'},
+                                {value: 484, name: '联盟广告'},
+                                {value: 300, name: '视频广告'}
+                            ],
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+
+                option && myChart.setOption(option);
+            }
+        }
+    })
+</script>
+</html>
